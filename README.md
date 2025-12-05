@@ -1,0 +1,2 @@
+# QRCodeGeneratorYMCK
+URLからQRコードを生成するためのWindows用デスクトップアプリケーションです。
