@@ -8,6 +8,7 @@ import os
 import qrcode
 import threading
 import openpyxl
+from openpyxl.utils.exceptions import InvalidFileException
 from tkinter import filedialog, messagebox
 from PIL import Image
 
@@ -167,6 +168,7 @@ class App(customtkinter.CTk):
         folder_path = filedialog.askopenfilename(
             title="Excelファイルの選択",
         )
+        self.tabview2_entry1.delete(0, tkinter.END)
         self.tabview2_entry1.insert(0, folder_path)
 
     def qr_thread(self):
@@ -191,8 +193,14 @@ class App(customtkinter.CTk):
                 message="入力していない項目があります。\n再度確認してください。",
             )
         else:
-
-            workbook = openpyxl.load_workbook(file_path, data_only=True)
+            try:
+                workbook = openpyxl.load_workbook(file_path, data_only=True)
+            except (FileNotFoundError, InvalidFileException):
+                messagebox.showerror(
+                    title="エラー",
+                    message="ファイルを読み込めませんでした。パスと形式を確認してください。",
+                )
+                return
             sheet = workbook.worksheets[0]
             last_row = sheet.max_row
             flag = True
